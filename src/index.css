@@ -1,0 +1,82 @@
+
+@font-face{
+  font-family: HelveticaNowRegular;
+  src: url("/fonts/helvetica-nowDisplay/HelveticaNowDisplay-Regular.woff2")
+}  
+
+
+@import "tailwindcss";
+@plugin 'tailwind-scrollbar';
+
+@theme{
+  --font-helvetica-regular: HelveticaNowRegular , "sans-serif";
+}
+
+/* 
+@layer components {
+  .btn-grad {
+    @apply bg-gradient-to-r from-[#141E30] via-[#243B55] to-[#141E30] text-white px-12 py-4 rounded-lg shadow-lg uppercase text-center transition-all duration-500;
+  }
+
+  .btn-grad:hover {
+    @apply bg-[right_center] text-white;
+  }
+} */
+
+ 
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Global scrollbar hiding (optional - applies to entire app) */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Or if you want to hide only body scrollbar */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom class for specific elements */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Alternative: Make scrollbar invisible but keep the space */
+.scrollbar-invisible::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+.scrollbar-invisible {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+button{
+  cursor: pointer;
+}

@@ -1,0 +1,343 @@
+/* components/Modal/BlogViewModal.css */
+
+/* Blog Content Preview Styling */
+.blog-content-preview {
+  line-height: 1.8;
+  color: #374151;
+  font-size: 16px;
+}
+
+/* Headings */
+.blog-content-preview h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.blog-content-preview h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 1.75rem;
+  margin-bottom: 0.875rem;
+  color: #1f2937;
+  line-height: 1.3;
+}
+
+.blog-content-preview h3 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #1f2937;
+  line-height: 1.4;
+}
+
+.blog-content-preview h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.625rem;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.blog-content-preview h5 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.blog-content-preview h6 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+/* Paragraphs */
+.blog-content-preview p {
+  margin-bottom: 1.25rem;
+  line-height: 1.8;
+}
+
+.blog-content-preview p:last-child {
+  margin-bottom: 0;
+}
+
+/* Links */
+.blog-content-preview a {
+  color: #2563eb;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.blog-content-preview a:hover {
+  color: #1d4ed8;
+}
+
+/* Lists */
+.blog-content-preview ul,
+.blog-content-preview ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.75rem;
+}
+
+.blog-content-preview ul {
+  list-style-type: disc;
+}
+
+.blog-content-preview ol {
+  list-style-type: decimal;
+}
+
+.blog-content-preview li {
+  margin-bottom: 0.5rem;
+  line-height: 1.8;
+}
+
+.blog-content-preview li p {
+  margin-bottom: 0.5rem;
+}
+
+/* Nested lists */
+.blog-content-preview ul ul,
+.blog-content-preview ol ul {
+  list-style-type: circle;
+  margin-top: 0.5rem;
+}
+
+.blog-content-preview ol ol,
+.blog-content-preview ul ol {
+  list-style-type: lower-alpha;
+  margin-top: 0.5rem;
+}
+
+/* Blockquotes */
+.blog-content-preview blockquote {
+  border-left: 4px solid #3b82f6;
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: #4b5563;
+  background-color: #f3f4f6;
+  padding: 1rem 1.5rem;
+  border-radius: 0.375rem;
+}
+
+/* Code blocks */
+.blog-content-preview pre {
+  background-color: #1f2937;
+  color: #f3f4f6;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.blog-content-preview code {
+  background-color: #f3f4f6;
+  color: #ef4444;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.875rem;
+}
+
+.blog-content-preview pre code {
+  background-color: transparent;
+  color: #f3f4f6;
+  padding: 0;
+}
+
+/* Images */
+.blog-content-preview img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Tables */
+.blog-content-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.blog-content-preview th,
+.blog-content-preview td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.blog-content-preview th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #111827;
+}
+
+.blog-content-preview tr:last-child td {
+  border-bottom: none;
+}
+
+.blog-content-preview tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Horizontal rules */
+.blog-content-preview hr {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 2rem 0;
+}
+
+/* Strong and emphasis */
+.blog-content-preview strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+.blog-content-preview em {
+  font-style: italic;
+}
+
+/* Text formatting */
+.blog-content-preview u {
+  text-decoration: underline;
+}
+
+.blog-content-preview s,
+.blog-content-preview del {
+  text-decoration: line-through;
+}
+
+.blog-content-preview mark {
+  background-color: #fef3c7;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.125rem;
+}
+
+/* Subscript and superscript */
+.blog-content-preview sub,
+.blog-content-preview sup {
+  font-size: 0.75rem;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.blog-content-preview sup {
+  top: -0.5em;
+}
+
+.blog-content-preview sub {
+  bottom: -0.25em;
+}
+
+/* Text alignment */
+.blog-content-preview [style*="text-align: center"] {
+  text-align: center;
+}
+
+.blog-content-preview [style*="text-align: right"] {
+  text-align: right;
+}
+
+.blog-content-preview [style*="text-align: justify"] {
+  text-align: justify;
+}
+
+/* Color preservation */
+.blog-content-preview [style*="color"] {
+  /* Colors will be preserved from inline styles */
+}
+
+/* Font size preservation */
+.blog-content-preview [style*="font-size"] {
+  /* Font sizes will be preserved from inline styles */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .blog-content-preview {
+    font-size: 15px;
+  }
+
+  .blog-content-preview h1 {
+    font-size: 2rem;
+  }
+
+  .blog-content-preview h2 {
+    font-size: 1.75rem;
+  }
+
+  .blog-content-preview h3 {
+    font-size: 1.5rem;
+  }
+
+  .blog-content-preview h4 {
+    font-size: 1.25rem;
+  }
+
+  .blog-content-preview h5 {
+    font-size: 1.125rem;
+  }
+
+  .blog-content-preview h6 {
+    font-size: 1rem;
+  }
+
+  .blog-content-preview pre {
+    padding: 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .blog-content-preview table {
+    font-size: 0.875rem;
+  }
+
+  .blog-content-preview th,
+  .blog-content-preview td {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* Smooth scrolling for anchors */
+.blog-content-preview a[href^="#"] {
+  scroll-behavior: smooth;
+}
+
+/* Print styles */
+@media print {
+  .blog-content-preview {
+    font-size: 12pt;
+    color: black;
+  }
+
+  .blog-content-preview a {
+    color: black;
+    text-decoration: underline;
+  }
+
+  .blog-content-preview pre {
+    background-color: #f3f4f6;
+    color: black;
+    border: 1px solid #d1d5db;
+  }
+}
