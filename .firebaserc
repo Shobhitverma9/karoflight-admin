@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "airmbm-website"
+  },
+  "targets": {
+    "airmbm-website": {
+      "hosting": {
+        "admin": [
+          "airmbm-admin"
+        ]
+      }
+    }
+  }
+}

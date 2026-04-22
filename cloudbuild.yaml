@@ -1,0 +1,22 @@
+steps:
+  # 1. Install dependencies
+  - name: 'node:18'
+    entrypoint: 'npm'
+    args: ['install']
+
+  # 2. Build the production bundle
+  - name: 'node:18'
+    entrypoint: 'npm'
+    args: ['run', 'build']
+    env:
+      - 'VITE_API_BASE_URL=/api'
+      - 'VITE_ENV=production'
+      - 'VITE_REDUX_PERSIST_SECRET=Asdsad213213fdsf23@12563'
+
+  # 3. Deploy to Firebase Hosting (admin target)
+  - name: 'node:18'
+    entrypoint: 'npx'
+    args: ['firebase-tools', 'deploy', '--only', 'hosting:admin', '--project', 'airmbm-website']
+
+options:
+  logging: CLOUD_LOGGING_ONLY

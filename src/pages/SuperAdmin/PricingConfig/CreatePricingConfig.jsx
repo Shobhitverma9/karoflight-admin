@@ -38,6 +38,7 @@ export const CreatePricingConfig = () => {
       precedence: "1",
       airlines: [],
       routes: [{ from: "", to: "" }],
+      fareCategories: [], // e.g., ["OFFER", "SME", "CORPORATE", "PUBLISHED"]
       hotelIds: [],
       cities: [],
       countries: [],
@@ -115,6 +116,7 @@ export const CreatePricingConfig = () => {
       payload.routes = data.routes
         .filter((r) => r.from.trim() !== "" && r.to.trim() !== "")
         .map((r) => ({ from: r.from.trim(), to: r.to.trim() }));
+      payload.fareCategories = data.fareCategories || [];
     }
 
     // Add hotel-specific fields
@@ -399,6 +401,35 @@ export const CreatePricingConfig = () => {
                       </div>
                     ))}
                   </div>
+                </div>
+
+                {/* Fare Categories */}
+                <div className="border-b pb-4">
+                  <h4 className="font-semibold text-lg mb-4">Fare Categories</h4>
+                  <div className="flex flex-wrap gap-6 mt-2">
+                    {[
+                      { id: "OFFER_WITH_PNR", label: "Offer Fare (With PNR)" },
+                      { id: "OFFER_WITHOUT_PNR", label: "Offer Fare (Without PNR)" },
+                      { id: "SME", label: "SME Fares" },
+                      { id: "CORPORATE", label: "Corporate Fares" },
+                      { id: "PUBLISHED", label: "Published Fares" },
+                    ].map((cat) => (
+                      <label key={cat.id} className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          value={cat.id}
+                          {...register("fareCategories")}
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <span className="text-sm font-medium text-gray-700">
+                          {cat.label}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Leave all unchecked to apply to all fare types
+                  </p>
                 </div>
               </>
             )}

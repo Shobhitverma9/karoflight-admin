@@ -22,6 +22,7 @@ import {
   TbReportAnalytics,
   TbCreditCard,
   TbSearch,
+  TbWorld,
 } from "react-icons/tb";
 import { LuSettings2 } from "react-icons/lu";
 import { FaQuestion } from "react-icons/fa";
@@ -106,16 +107,14 @@ const Sidebar = ({ isSideNavOpen, setIsSideNavOpen }) => {
       path: "/analytics-system",
       icon: <TbChartBar size={25} />,
     },
-    // {
-    //   label: "Security",
-    //   path: "/security-audit-logs",
-    //   icon: <TbShield size={25} />,
-    // },
-    // {
-    //   label: "Settings",
-    //   path: "/settings",
-    //   icon: <TbSettings size={25} />,
-    // },
+    {
+      label: "Vedic Wanderers",
+      icon: <TbWorld size={25} />,
+      subItems: [
+        { label: "All Packages", path: "/vedic-packages" },
+        { label: "Add Package", path: "/vedic-packages/create" },
+      ],
+    },
   ];
 
   // ADMIN MENU
@@ -194,6 +193,14 @@ const Sidebar = ({ isSideNavOpen, setIsSideNavOpen }) => {
         { label: "See Analytics", path: "/offers/analytics" },
       ],
     },
+    {
+      label: "Vedic Wanderers",
+      icon: <TbWorld size={25} />,
+      subItems: [
+        { label: "All Packages", path: "/vedic-packages" },
+        { label: "Add Package", path: "/vedic-packages/create" },
+      ],
+    },
   ];
 
   // SEO MENU
@@ -262,9 +269,8 @@ const Sidebar = ({ isSideNavOpen, setIsSideNavOpen }) => {
 
   return (
     <div
-      className={`fixed top-0 bottom-0 left-0 lg:static z-40 flex w-72 flex-col border-r border-r-slate-200 bg-white transition-transform lg:translate-x-0 ${
-        isSideNavOpen ? "translate-x-0" : " -translate-x-full"
-      }`}
+      className={`fixed top-0 bottom-0 left-0 lg:static z-40 flex w-72 flex-col border-r border-r-slate-200 bg-white transition-transform lg:translate-x-0 ${isSideNavOpen ? "translate-x-0" : " -translate-x-full"
+        }`}
     >
       {/* Logo */}
       <div className="ps-6 mt-2">
@@ -297,22 +303,20 @@ const Sidebar = ({ isSideNavOpen, setIsSideNavOpen }) => {
                       onClick={() => toggleDropdown(itm.label)}
                       onMouseEnter={() => setHoveredItem(itm.label)}
                       onMouseLeave={() => setHoveredItem(null)}
-                      className={`flex w-full items-center gap-3 rounded p-3 transition-colors hover:bg-emerald-50 hover:text-emerald-500 focus:bg-emerald-50 focus:text-emerald-500 ${
-                        openDropdown === itm.label
+                      className={`flex w-full items-center gap-3 rounded p-3 transition-colors hover:bg-emerald-50 hover:text-emerald-500 focus:bg-emerald-50 focus:text-emerald-500 ${openDropdown === itm.label
                           ? "bg-emerald-50 text-emerald-500"
                           : ""
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center">{itm.icon}</div>
                       <div className="flex-1 text-left">{itm.label}</div>
                       <IoChevronForward
                         size={18}
-                        className={`transform transition-transform duration-200 ${
-                          openDropdown === itm.label ||
-                          hoveredItem === itm.label
+                        className={`transform transition-transform duration-200 ${openDropdown === itm.label ||
+                            hoveredItem === itm.label
                             ? "rotate-90"
                             : ""
-                        }`}
+                          }`}
                       />
                     </button>
                     {openDropdown === itm.label && (
@@ -323,10 +327,9 @@ const Sidebar = ({ isSideNavOpen, setIsSideNavOpen }) => {
                               to={sub.path}
                               onClick={handleLinkClick}
                               className={({ isActive }) =>
-                                `block rounded px-3 py-2 text-sm transition-colors hover:bg-emerald-50 hover:text-emerald-500 ${
-                                  isActive
-                                    ? "bg-emerald-50 text-emerald-500"
-                                    : ""
+                                `block rounded px-3 py-2 text-sm transition-colors hover:bg-emerald-50 hover:text-emerald-500 ${isActive
+                                  ? "bg-emerald-50 text-emerald-500"
+                                  : ""
                                 }`
                               }
                             >
@@ -345,8 +348,7 @@ const Sidebar = ({ isSideNavOpen, setIsSideNavOpen }) => {
                     to={itm.path}
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 rounded p-3 transition-colors hover:bg-emerald-50 hover:text-emerald-500 focus:bg-emerald-50 focus:text-emerald-500 ${
-                        isActive ? "bg-emerald-50 text-emerald-500" : ""
+                      `flex items-center gap-3 rounded p-3 transition-colors hover:bg-emerald-50 hover:text-emerald-500 focus:bg-emerald-50 focus:text-emerald-500 ${isActive ? "bg-emerald-50 text-emerald-500" : ""
                       }`
                     }
                   >

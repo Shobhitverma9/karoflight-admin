@@ -624,7 +624,7 @@ const SEOAdminPanel = () => {
                   <a
                     href={
                       viewingPage.canonicalUrl ||
-                      `https://karoflight.com/${viewingPage.slug}`
+                      `https://airmbm.com/${viewingPage.slug}`
                     }
                     target="_blank"
                     rel="noopener noreferrer"
@@ -808,7 +808,7 @@ const SEOAdminPanel = () => {
                         value={formData.canonicalUrl}
                         onChange={handleInputChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="https://karoflight.com/page-url"
+                        placeholder="https://airmbm.com/page-url"
                       />
                     </div>
                   </div>
@@ -1061,7 +1061,7 @@ const SEOAdminPanel = () => {
                           <a
                             href={
                               page.canonicalUrl ||
-                              `https://karoflight.com/${page.slug}`
+                              `https://airmbm.com/${page.slug}`
                             }
                             target="_blank"
                             rel="noopener noreferrer"

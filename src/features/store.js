@@ -55,7 +55,7 @@ const rootReducer = combineReducers({
    RESET STORE HANDLER
 ====================== */
 const rootReducerWithClear = (state, action) => {
-  if (action.type === "karoFlight/clearReduxStoreData") {
+  if (action.type === "airmbm/clearReduxStoreData") {
     state = undefined;
     localStorage.clear();
     sessionStorage.clear();
@@ -77,7 +77,7 @@ const transforms = reduxPersistSecret
   : []; // ✅ fail-safe: no crash if secret missing
 
 const persistConfig = {
-  key: "KaroFlightAdminPanel",
+  key: "AirmbmAdminPanel",
   version: 1,
   storage,
   transforms,

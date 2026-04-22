@@ -46,6 +46,8 @@ import RoundTripFlightBooking from "../components/SuperAdmin/SearchFlightHotel/F
 import MultiCityFlightBooking from "../components/SuperAdmin/SearchFlightHotel/Flight/MultiWayFlightBooked";
 import FlightSearch from "../components/SuperAdmin/SearchFlightHotel/Flight/FlightSearchCard";
 import AdminSearch from "../pages/SuperAdmin/AdminSearch/AdminSearch";
+import ListVedicPackages from "../pages/VedicPackages/ListVedicPackages";
+import CreateVedicPackage from "../pages/VedicPackages/CreateVedicPackage";
 
 export const appRouter = createBrowserRouter([
   {
@@ -244,8 +246,16 @@ export const appRouter = createBrowserRouter([
         path: "/single-flight-search",
         element: <OneWayFlightBooking />,
       },
+      // Vedic Packages
+      {
+        path: "/vedic-packages",
+        element: <ListVedicPackages />,
+      },
+      {
+        path: "/vedic-packages/create",
+        element: <CreateVedicPackage />,
+      },
     ],
   },
-], {
-  basename: "/admin"
-});
+], {});
+

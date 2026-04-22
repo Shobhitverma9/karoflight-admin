@@ -124,6 +124,7 @@ export const ViewPricingConfig = () => {
                   <>
                     <th className="py-3 px-6">Airlines</th>
                     <th className="py-3 px-6">Routes</th>
+                    <th className="py-3 px-6">Fare Categories</th>
                   </>
                 )}
                 {activeTab === "hotel" && (
@@ -234,6 +235,22 @@ export const ViewPricingConfig = () => {
                                   +{item.routes.length - 2} more
                                 </span>
                               )}
+                            </div>
+                          ) : (
+                            <span className="text-gray-400 text-xs">All</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {item.fareCategories && item.fareCategories.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {item.fareCategories.map((cat, i) => (
+                                <span
+                                  key={i}
+                                  className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded"
+                                >
+                                  {cat}
+                                </span>
+                              ))}
                             </div>
                           ) : (
                             <span className="text-gray-400 text-xs">All</span>

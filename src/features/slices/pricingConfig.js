@@ -1,4 +1,4 @@
-// KFLIGHTupdated\kflight-frontend\Admin\src\features\slices\pricingConfig.js
+// KFLIGHTupdated\airmbm-frontend\Admin\src\features\slices\pricingConfig.js
 import { createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import {

@@ -99,7 +99,7 @@ const Login = () => {
       <div className="flex flex-wrap h-screen justify-center items-center">
         <div className="hidden w-full xl:block xl:w-1/2">
           <div className="py-17.5 px-26 text-center">
-            <p className="text-2xl">Welcome to the Karo Flight Admin Panel</p>
+            <p className="text-2xl">Welcome to the AirMBM Admin Panel</p>
             <span className="mt-16 inline-block">
               <svg
                 width="350"
@@ -231,7 +231,7 @@ const Login = () => {
               <img
                 className="h-16 rounded mx-auto mb-4"
                 src={logo}
-                alt="Karo Flight Logo"
+                alt="AirMBM Logo"
               />
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
                 Admin Login

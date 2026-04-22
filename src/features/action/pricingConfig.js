@@ -1,4 +1,4 @@
-// KFLIGHTupdated\kflight-frontend\Admin\src\features\action\pricingConfig.js
+// KFLIGHTupdated\airmbm-frontend\Admin\src\features\action\pricingConfig.js
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../../services/axiosInterceptor";
 export const getAllPricingConfig = createAsyncThunk(
