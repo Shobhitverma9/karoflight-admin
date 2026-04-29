@@ -36,7 +36,18 @@ api.interceptors.request.use(
 
 // Response interceptor
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // 🔥 CRITICAL: Check if response is HTML (happens on incorrect base URL hitting frontend)
+    const contentType = response.headers["content-type"];
+    if (contentType && contentType.includes("text/html")) {
+      console.error("❌ API returned HTML instead of JSON. Check baseURL configuration.");
+      return Promise.reject({
+        message: "Server returned HTML instead of JSON. Possible incorrect API URL.",
+        response: response
+      });
+    }
+    return response;
+  },
   (error) => {
     const { response } = error;
 

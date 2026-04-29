@@ -946,7 +946,7 @@ export default function MultiCityFlightBooking() {
                         Need Help?
                       </p>
                       <p className="text-xs text-gray-600">
-                        Call 1800-123-4567 (24/7)
+                        Call +91 9717440062 (24/7)
                       </p>
                       <p className="text-xs text-gray-600">
                         Email: support@flightbook.com

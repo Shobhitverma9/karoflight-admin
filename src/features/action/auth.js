@@ -38,7 +38,8 @@ const decodeTokenPayload = (token) => {
 
 // Helper to store auth data
 const storeAuthData = (data) => {
-  if (data?.token) {
+  // Ensure data is a valid object and not an HTML string
+  if (data && typeof data === 'object' && data.token) {
     const staffData = data.staff || data.user || data;
     
     localStorage.setItem("token", data.token);
@@ -58,8 +59,11 @@ const storeAuthData = (data) => {
     }
     
     console.log("✅ Auth data stored:", { staffData, token: data.token.substring(0, 20) + "..." });
+  } else {
+    console.warn("⚠️ Invalid auth data received:", data);
   }
 };
+
 
 // Helper to clear auth data
 const clearAuthData = () => {
@@ -140,6 +144,16 @@ export const logIn = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const data = await apiCall("post", "staff/login", payload);
+      
+      // Check if we got an HTML response instead of JSON
+      if (typeof data === 'string' && data.includes('<!doctype html>')) {
+        return rejectWithValue("Server returned HTML instead of JSON. Check your API URL settings.");
+      }
+
+      if (!data || !data.token) {
+        return rejectWithValue("Invalid login response from server");
+      }
+
       storeAuthData(data);
       return data;
     } catch (error) {
@@ -149,6 +163,7 @@ export const logIn = createAsyncThunk(
     }
   }
 );
+
 
 // Logout
 export const logout = createAsyncThunk(
