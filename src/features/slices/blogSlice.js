@@ -1,13 +1,7 @@
 // src/features/slices/blogSlice.js
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-const API_BASE_URL = import.meta.env.VITE_RENDER_API_BASE_URL;
-
-// Helper: Get auth token
-const getAuthToken = () => {
-  return sessionStorage.getItem("token") || sessionStorage.getItem("authToken");
-};
+import { api } from "../../services/axiosInterceptor";
 
 // ============================================
 // BLOG ASYNC THUNKS
@@ -18,25 +12,8 @@ export const fetchBlogs = createAsyncThunk(
   "blogs/fetchBlogs",
   async (params = {}, { rejectWithValue }) => {
     try {
-      const queryParams = new URLSearchParams();
-      if (params.page) queryParams.append('page', params.page);
-      if (params.limit) queryParams.append('limit', params.limit);
-      if (params.status) queryParams.append('status', params.status);
-      if (params.tag) queryParams.append('tag', params.tag);
-      if (params.category) queryParams.append('category', params.category);
-      if (params.author_id) queryParams.append('author_id', params.author_id);
-      if (params.search) queryParams.append('search', params.search);
-
-      const url = `${API_BASE_URL}/blogs/list${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
-      const res = await fetch(url);
-      
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: "Failed to fetch blogs" }));
-        throw new Error(errorData.message || "Failed to fetch blogs");
-      }
-      
-      const data = await res.json();
-      return data.data || [];
+      const res = await api.get("/blogs/list", { params });
+      return res.data.data || [];
     } catch (err) {
       console.error("Fetch blogs error:", err);
       return rejectWithValue(err.message);
@@ -49,15 +26,8 @@ export const fetchBlogById = createAsyncThunk(
   "blogs/fetchBlogById",
   async (slugOrId, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/blogs/one/${slugOrId}`);
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to fetch blog");
-      }
-      
-      const data = await res.json();
-      return data.data;
+      const res = await api.get(`/blogs/one/${slugOrId}`);
+      return res.data.data;
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -69,48 +39,11 @@ export const createBlog = createAsyncThunk(
   "blogs/createBlog",
   async ({ formData }, { rejectWithValue }) => {
     try {
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error("Authorization token missing. Please log in again.");
-      }
-
-      let payload;
-      let headers = {
-        Authorization: `Bearer ${token}`,
-      };
-
-      if (formData instanceof FormData) {
-        payload = formData;
-      } else {
-        payload = JSON.stringify(formData);
-        headers["Content-Type"] = "application/json";
-      }
-
-      const res = await fetch(`${API_BASE_URL}/blogs/create`, {
-        method: "POST",
-        headers,
-        body: payload,
-      });
-
-      const responseData = await res.json().catch(() => null);
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          throw new Error("Unauthorized: Please log in again.");
-        }
-        if (res.status === 403) {
-          throw new Error("Forbidden: You don't have permission to create blogs.");
-        }
-        throw new Error(
-          responseData?.message || responseData?.error || "Failed to create blog"
-        );
-      }
-
-      const createdBlog = responseData.data;
+      const res = await api.post("/blogs/create", formData);
+      const createdBlog = res.data.data;
       if (!createdBlog || !createdBlog._id) {
         throw new Error("Invalid response: No blog data returned");
       }
-
       return createdBlog;
     } catch (err) {
       console.error("Create blog error:", err);
@@ -124,44 +57,11 @@ export const updateBlog = createAsyncThunk(
   "blogs/updateBlog",
   async ({ id, formData }, { rejectWithValue }) => {
     try {
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error("Authorization token missing. Please log in again.");
-      }
-
-      const isFormData = formData instanceof FormData;
-      const headers = {};
-
-      if (!isFormData) {
-        headers["Content-Type"] = "application/json";
-      }
-      headers["Authorization"] = `Bearer ${token}`;
-
-      const res = await fetch(`${API_BASE_URL}/blogs/update/${id}`, {
-        method: "PUT",
-        headers: headers,
-        body: isFormData ? formData : JSON.stringify(formData),
-      });
-
-      const responseData = await res.json().catch(() => null);
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          throw new Error("Unauthorized: Please log in again.");
-        }
-        if (res.status === 403) {
-          throw new Error("Forbidden: You don't have permission to update blogs.");
-        }
-        throw new Error(
-          responseData?.message || responseData?.error || `Failed to update blog (${res.status})`
-        );
-      }
-
-      const updatedBlog = responseData.data;
+      const res = await api.put(`/blogs/update/${id}`, formData);
+      const updatedBlog = res.data.data;
       if (!updatedBlog || !updatedBlog._id) {
         throw new Error("Invalid response: Missing updated blog data");
       }
-
       return updatedBlog;
     } catch (err) {
       console.error("Update blog error:", err);
@@ -175,30 +75,7 @@ export const deleteBlog = createAsyncThunk(
   "blogs/deleteBlog",
   async (id, { rejectWithValue }) => {
     try {
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error("Authorization token missing. Please log in again.");
-      }
-
-      const res = await fetch(`${API_BASE_URL}/blogs/delete/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          throw new Error("Unauthorized: Please log in again.");
-        }
-        if (res.status === 403) {
-          throw new Error("Forbidden: You don't have permission to delete blogs.");
-        }
-        const responseData = await res.json().catch(() => null);
-        throw new Error(
-          responseData?.message || responseData?.error || "Failed to delete blog"
-        );
-      }
+      await api.delete(`/blogs/delete/${id}`);
       return id;
     } catch (err) {
       console.error("Delete blog error:", err);
@@ -212,40 +89,13 @@ export const approveOrRejectBlog = createAsyncThunk(
   "blogs/approveOrRejectBlog",
   async ({ id, action, reason }, { rejectWithValue }) => {
     try {
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error("Authorization token missing. Please log in again.");
-      }
-
       const body = { action };
       if (action === 'reject' && reason) {
         body.reason = reason;
       }
 
-      const res = await fetch(`${API_BASE_URL}/blogs/approve-reject/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(body),
-      });
-
-      const responseData = await res.json().catch(() => null);
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          throw new Error("Unauthorized: Please log in again.");
-        }
-        if (res.status === 403) {
-          throw new Error("Forbidden: Only SuperAdmin can approve/reject blogs.");
-        }
-        throw new Error(
-          responseData?.message || responseData?.error || "Failed to process blog approval"
-        );
-      }
-
-      return responseData.data;
+      const res = await api.post(`/blogs/approve-reject/${id}`, body);
+      return res.data.data;
     } catch (err) {
       console.error("Approve/Reject blog error:", err);
       return rejectWithValue(err.message);
@@ -258,30 +108,8 @@ export const getBlogAnalytics = createAsyncThunk(
   "blogs/getBlogAnalytics",
   async (_, { rejectWithValue }) => {
     try {
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error("Authorization token missing. Please log in again.");
-      }
-
-      const res = await fetch(`${API_BASE_URL}/blogs/analytics/summary`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          throw new Error("Unauthorized: Please log in again.");
-        }
-        if (res.status === 403) {
-          throw new Error("Forbidden: Only SuperAdmin can view analytics.");
-        }
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to fetch analytics");
-      }
-
-      const data = await res.json();
-      return data.data;
+      const res = await api.get("/blogs/analytics/summary");
+      return res.data.data;
     } catch (err) {
       console.error("Fetch analytics error:", err);
       return rejectWithValue(err.message);
@@ -298,23 +126,10 @@ export const addComment = createAsyncThunk(
   "blogs/addComment",
   async ({ blogId, authorName, authorEmail, text, sectionId }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/blogs/${blogId}/comment`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ authorName, authorEmail, text, sectionId }),
+      const res = await api.post(`/blogs/${blogId}/comment`, {
+        authorName, authorEmail, text, sectionId
       });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({
-          message: "Failed to add comment",
-        }));
-        throw new Error(errorData.message || "Failed to add comment");
-      }
-
-      const data = await response.json();
-      return { blogId, comment: data.data };
+      return { blogId, comment: res.data.data };
     } catch (error) {
       console.error("Add comment error:", error);
       return rejectWithValue(error.message);
@@ -327,29 +142,8 @@ export const fetchComments = createAsyncThunk(
   "blogs/fetchComments",
   async (blogId, { rejectWithValue }) => {
     try {
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error("Authorization token missing. Please log in again.");
-      }
-
-      const response = await fetch(`${API_BASE_URL}/blogs/${blogId}/comments`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error("Unauthorized: Please log in again.");
-        }
-        const errorData = await response.json().catch(() => ({
-          message: "Failed to fetch comments",
-        }));
-        throw new Error(errorData.message || "Failed to fetch comments");
-      }
-
-      const data = await response.json();
-      return data.data || [];
+      const res = await api.get(`/blogs/${blogId}/comments`);
+      return res.data.data || [];
     } catch (error) {
       console.error("Fetch comments error:", error);
       return rejectWithValue(error.message);
@@ -362,38 +156,11 @@ export const moderateComment = createAsyncThunk(
   "blogs/moderateComment",
   async ({ blogId, commentId, action, moderator_id }, { rejectWithValue }) => {
     try {
-      const token = getAuthToken();
-      if (!token) {
-        throw new Error("Authorization token missing. Please log in again.");
-      }
-
-      const response = await fetch(
-        `${API_BASE_URL}/blogs/${blogId}/comments/${commentId}/moderate`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ action, moderator_id }),
-        }
+      const res = await api.post(
+        `/blogs/${blogId}/comments/${commentId}/moderate`,
+        { action, moderator_id }
       );
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error("Unauthorized: Please log in again.");
-        }
-        if (response.status === 403) {
-          throw new Error("Forbidden: Only SuperAdmin can moderate comments.");
-        }
-        const errorData = await response.json().catch(() => ({
-          message: "Failed to moderate comment",
-        }));
-        throw new Error(errorData.message || "Failed to moderate comment");
-      }
-
-      const data = await response.json();
-      return data.data;
+      return res.data.data;
     } catch (error) {
       console.error("Moderate comment error:", error);
       return rejectWithValue(error.message);

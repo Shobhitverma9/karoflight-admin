@@ -1,44 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-// Proper API URL configuration with fallback
-const getApiBaseUrl = () => {
-  // Use VITE_RENDER_API_BASE_URL if available
-  if (import.meta.env.VITE_RENDER_API_BASE_URL) {
-    return import.meta.env.VITE_RENDER_API_BASE_URL;
-  }
-  
-  // Fallback to environment-specific URLs
-  const isProduction = import.meta.env.VITE_PRODUCTION === "true";
-  if (isProduction) {
-    return import.meta.env.VITE_REACT_APP_API_BASE_URL_PRODUCTION || "https://demo.com/api";
-  } else {
-    return import.meta.env.VITE_REACT_APP_API_BASE_URL_DEVELOPMENT || "http://localhost:8000/api/v1";
-  }
-};
-
-const API_BASE_URL = `${getApiBaseUrl()}/faqs`;
+import { api } from "../../services/axiosInterceptor";
 
 // Fetch all FAQ documents with optional filtering
 export const fetchAllFAQs = createAsyncThunk(
   "faq/fetchAllFAQs",
   async ({ pageSlug, status } = {}, { rejectWithValue }) => {
     try {
-      const params = new URLSearchParams();
-      if (pageSlug) params.append('pageSlug', pageSlug);
-      if (status) params.append('status', status);
-      
-      const queryString = params.toString();
-      const url = queryString ? `${API_BASE_URL}?${queryString}` : API_BASE_URL;
-      
-      console.log('Fetching FAQs from:', url); // Debug log
-      
-      const response = await fetch(url);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const json = await response.json();
+      const res = await api.get('/faqs', { params: { pageSlug, status } });
+      const json = res.data;
 
       if (json.success && Array.isArray(json.data)) {
         return json.data;
@@ -57,16 +26,8 @@ export const fetchFAQByPageSlug = createAsyncThunk(
   "faq/fetchFAQByPageSlug",
   async (slug, { rejectWithValue }) => {
     try {
-      const url = `${API_BASE_URL}/page/${slug}`;
-      console.log('Fetching FAQ by slug from:', url); // Debug log
-      
-      const response = await fetch(url);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const json = await response.json();
+      const res = await api.get(`/faqs/page/${slug}`);
+      const json = res.data;
 
       if (json.success) {
         return json.data;
@@ -85,16 +46,8 @@ export const fetchFAQById = createAsyncThunk(
   "faq/fetchFAQById",
   async (id, { rejectWithValue }) => {
     try {
-      const url = `${API_BASE_URL}/${id}`;
-      console.log('Fetching FAQ by ID from:', url); // Debug log
-      
-      const response = await fetch(url);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const json = await response.json();
+      const res = await api.get(`/faqs/${id}`);
+      const json = res.data;
 
       if (json.success) {
         return json.data;
@@ -113,19 +66,8 @@ export const createNewFAQ = createAsyncThunk(
   "faq/createFAQ",
   async (faqData, { rejectWithValue }) => {
     try {
-      console.log('Creating FAQ at:', API_BASE_URL); // Debug log
-      
-      const response = await fetch(API_BASE_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(faqData),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const json = await response.json();
+      const res = await api.post('/faqs', faqData);
+      const json = res.data;
 
       if (json.success) {
         return json.data;
@@ -144,20 +86,8 @@ export const updateFAQ = createAsyncThunk(
   "faq/updateFAQ",
   async ({ id, updates }, { rejectWithValue }) => {
     try {
-      const url = `${API_BASE_URL}/${id}`;
-      console.log('Updating FAQ at:', url); // Debug log
-      
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updates),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const json = await response.json();
+      const res = await api.put(`/faqs/${id}`, updates);
+      const json = res.data;
 
       if (json.success) {
         return json.data;
@@ -176,18 +106,8 @@ export const deleteFAQ = createAsyncThunk(
   "faq/deleteFAQ",
   async (id, { rejectWithValue }) => {
     try {
-      const url = `${API_BASE_URL}/${id}`;
-      console.log('Deleting FAQ at:', url); // Debug log
-      
-      const response = await fetch(url, {
-        method: "DELETE",
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const json = await response.json();
+      const res = await api.delete(`/faqs/${id}`);
+      const json = res.data;
 
       if (json.success) {
         return { id, message: json.message };
@@ -206,20 +126,8 @@ export const updateFAQStatus = createAsyncThunk(
   "faq/updateFAQStatus",
   async ({ id, status }, { rejectWithValue }) => {
     try {
-      const url = `${API_BASE_URL}/${id}/status`;
-      console.log('Updating FAQ status at:', url); // Debug log
-      
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const json = await response.json();
+      const res = await api.patch(`/faqs/${id}/status`, { status });
+      const json = res.data;
 
       if (json.success) {
         return json.data;
@@ -238,20 +146,8 @@ export const addFAQItem = createAsyncThunk(
   "faq/addFAQItem",
   async ({ faqId, question, answer, order }, { rejectWithValue }) => {
     try {
-      const url = `${API_BASE_URL}/${faqId}/items`;
-      console.log('Adding FAQ item at:', url); // Debug log
-      
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, answer, order }),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const json = await response.json();
+      const res = await api.post(`/faqs/${faqId}/items`, { question, answer, order });
+      const json = res.data;
 
       if (json.success) {
         return { faqId, item: json.data };
@@ -270,20 +166,8 @@ export const updateFAQItem = createAsyncThunk(
   "faq/updateFAQItem",
   async ({ faqId, itemId, updates }, { rejectWithValue }) => {
     try {
-      const url = `${API_BASE_URL}/${faqId}/items/${itemId}`;
-      console.log('Updating FAQ item at:', url); // Debug log
-      
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updates),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const json = await response.json();
+      const res = await api.put(`/faqs/${faqId}/items/${itemId}`, updates);
+      const json = res.data;
 
       if (json.success) {
         return { faqId, itemId, item: json.data };
@@ -302,18 +186,8 @@ export const deleteFAQItem = createAsyncThunk(
   "faq/deleteFAQItem",
   async ({ faqId, itemId }, { rejectWithValue }) => {
     try {
-      const url = `${API_BASE_URL}/${faqId}/items/${itemId}`;
-      console.log('Deleting FAQ item at:', url); // Debug log
-      
-      const response = await fetch(url, {
-        method: "DELETE",
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const json = await response.json();
+      const res = await api.delete(`/faqs/${faqId}/items/${itemId}`);
+      const json = res.data;
 
       if (json.success) {
         return { faqId, itemId, message: json.message };
@@ -332,20 +206,8 @@ export const toggleFAQItemVisibility = createAsyncThunk(
   "faq/toggleFAQItemVisibility",
   async ({ faqId, itemId, is_hidden }, { rejectWithValue }) => {
     try {
-      const url = `${API_BASE_URL}/${faqId}/items/${itemId}/visibility`;
-      console.log('Toggling FAQ item visibility at:', url); // Debug log
-      
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ is_hidden }),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const json = await response.json();
+      const res = await api.patch(`/faqs/${faqId}/items/${itemId}/visibility`, { is_hidden });
+      const json = res.data;
 
       if (json.success) {
         return { faqId, itemId, item: json.data };

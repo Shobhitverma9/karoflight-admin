@@ -1,18 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-/* -------------------------------------------------------------------------- */
-/*                               API CONSTANTS                                */
-/* -------------------------------------------------------------------------- */
-
-const BASE_URL = import.meta.env?.VITE_RENDER_API_BASE_URL;
-// const BASE_URL =
-//   import.meta.env?.VITE_TRIPJACK_API_URL || "https://tripjack.com";
-
-const SEARCH_URL = BASE_URL + "/admin-search-flights/search";
-// const SEARCH_URL = BASE_URL + "/fms/v1/air-search-all";
-const REVIEW_URL = BASE_URL + "/fms/v1/review";
-const SEATMAP_URL = BASE_URL + "/fms/v1/seat";
-const FARERULE_URL = BASE_URL + "/fms/v2/farerule";
+import { api } from "../../services/axiosInterceptor";
 
 const API_KEY =
   import.meta.env?.VITE_REACT_APP_TRIPJACK_FLIGHT_TEST_API_KEY || "";
@@ -97,18 +84,8 @@ export const searchFlights = createAsyncThunk(
         },
       };
 
- const res = await fetch(SEARCH_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  },
-  body: JSON.stringify({ searchParams }),
-  signal,
-});
-
-      const json = await res.json();
-      if (!res.ok) throw json;
+      const res = await api.post("/admin-search-flights/search", { searchParams }, { signal });
+      const json = res.data;
 
       return json.data;
     } catch (err) {
@@ -134,17 +111,11 @@ export const reviewPrices = createAsyncThunk(
         sync: true,
       };
 
-      const res = await fetch(REVIEW_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: API_KEY,
-        },
-        body: JSON.stringify(body),
+      const res = await api.post("/fms/v1/review", body, {
+        headers: { apikey: API_KEY }
       });
 
-      const data = await res.json();
-      if (!res.ok) throw data;
+      const data = res.data;
       return data;
     } catch (err) {
       return rejectWithValue(err);
@@ -156,17 +127,11 @@ export const fetchSeatMap = createAsyncThunk(
   "flightSearch/seatMap",
   async ({ bookingId }, { rejectWithValue }) => {
     try {
-      const res = await fetch(SEATMAP_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: API_KEY,
-        },
-        body: JSON.stringify({ bookingId }),
+      const res = await api.post("/fms/v1/seat", { bookingId }, {
+        headers: { apikey: API_KEY }
       });
 
-      const data = await res.json();
-      if (!res.ok) throw data;
+      const data = res.data;
       return data;
     } catch (err) {
       return rejectWithValue(err);
@@ -186,17 +151,11 @@ export const fetchFareRules = createAsyncThunk(
         source: "B2C",
       };
 
-      const res = await fetch(FARERULE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: API_KEY,
-        },
-        body: JSON.stringify(body),
+      const res = await api.post("/fms/v2/farerule", body, {
+        headers: { apikey: API_KEY }
       });
 
-      const data = await res.json();
-      if (!res.ok) throw data;
+      const data = res.data;
       return data;
     } catch (err) {
       return rejectWithValue(err);

@@ -8,8 +8,12 @@ export const injectStore = (_store) => {
 const baseURL =
   import.meta.env.VITE_RENDER_API_BASE_URL;
 
+if (!baseURL) {
+  console.warn("⚠️ VITE_RENDER_API_BASE_URL is not defined in .env! API requests may fail or hit the wrong server.");
+}
+
 export const api = axios.create({
-  baseURL,
+  baseURL: baseURL || "/", // Fallback to root if undefined to avoid breaking axios.create
   // withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -40,9 +44,14 @@ api.interceptors.response.use(
     // 🔥 CRITICAL: Check if response is HTML (happens on incorrect base URL hitting frontend)
     const contentType = response.headers["content-type"];
     if (contentType && contentType.includes("text/html")) {
-      console.error("❌ API returned HTML instead of JSON. Check baseURL configuration.");
+      const errorMsg = `❌ API returned HTML instead of JSON. Check baseURL configuration. 
+        Attempted URL: ${response.config.url}
+        BaseURL: ${response.config.baseURL}`;
+      console.error(errorMsg);
       return Promise.reject({
         message: "Server returned HTML instead of JSON. Possible incorrect API URL.",
+        url: response.config.url,
+        baseURL: response.config.baseURL,
         response: response
       });
     }

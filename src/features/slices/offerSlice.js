@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-// Base API URL
-const API_BASE_URL = import.meta.env.VITE_RENDER_API_BASE_URL;
+import { api } from "../../services/axiosInterceptor";
 
 // ============================
 // Async Thunks
@@ -12,12 +10,8 @@ export const fetchOffers = createAsyncThunk(
   "offers/fetchOffers",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/offers/list`);
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`HTTP error! status: ${res.status} - ${errorText}`);
-      }
-      const data = await res.json();
+      const res = await api.get("/offers/list");
+      const data = res.data;
       return data.offers || data.data || data;
     } catch (err) {
       console.error("Failed to fetch offers:", err);
@@ -44,17 +38,8 @@ export const createOffer = createAsyncThunk(
         form.append("image", imageFile); // backend expects "image"
       }
 
-      const res = await fetch(`${API_BASE_URL}/offers`, {
-        method: "POST",
-        body: form,
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Failed to create offer: ${res.status} - ${errorText}`);
-      }
-
-      const json = await res.json();
+      const res = await api.post("/offers", form);
+      const json = res.data;
       return json.data || json.offer || json;
     } catch (err) {
       console.error("Create offer error:", err);
@@ -68,18 +53,8 @@ export const editOffer = createAsyncThunk(
   "offers/editOffer",
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/offers/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Failed to update offer: ${res.status} - ${errorText}`);
-      }
-
-      const response = await res.json();
+      const res = await api.put(`/offers/${id}`, data);
+      const response = res.data;
       const updatedOffer = response.data || response.offer || response;
 
       if (!updatedOffer._id && !updatedOffer.id) {
@@ -99,25 +74,9 @@ export const toggleOfferStatus = createAsyncThunk(
   "offers/toggleOfferStatus",
   async ({ id, active }, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/offers/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ active }),
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(
-          `Failed to update status: ${res.status} - ${errorText}`
-        );
-      }
-
-      let updatedOffer = { _id: id, active };
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        const json = await res.json();
-        updatedOffer = json.data || json.offer || updatedOffer;
-      }
+      const res = await api.put(`/offers/${id}`, { active });
+      const json = res.data;
+      let updatedOffer = json.data || json.offer || { _id: id, active };
 
       updatedOffer.active = active;
       return updatedOffer;
@@ -133,16 +92,7 @@ export const deleteOffer = createAsyncThunk(
   "offers/deleteOffer",
   async (id, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/offers/${id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Failed to delete offer: ${res.status} - ${errorText}`);
-      }
-
+      await api.delete(`/offers/${id}`);
       return id; // Return deleted ID
     } catch (err) {
       console.error("Delete offer error:", err);
